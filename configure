@@ -1,0 +1,62 @@
+#!/bin/bash
+
+allowed_destinations=(BIN MAN)
+
+# USAGE
+usage()
+{
+	echo "$0 [--<destination type>-dest=<destination> ... ]"
+	echo -e "\tSet the destination file paths."
+	echo -e "\tAvailable destinations are: ${allowed_destinations[@]}"
+	exit 0
+}
+
+case "$1"
+in
+	'-h' | '--help')
+		usage
+esac
+
+# DEFAULT DESTINATIONS
+BIN_DEST="/usr/local/bin"
+MAN_DEST="/usr/local/share/man"
+
+echo '-----------------'
+echo 'Parsing arguments'
+echo '-----------------'
+for i in $(seq "$#")
+do
+	argument="$1"
+	shift
+
+	# the argument is a destination one
+	if [[ "$argument" =~ --.+-dest=.+ ]]
+	then
+		location=$(echo "$argument" | cut -f 2 -d '=')
+		destination=$(echo "$argument" | cut -f 1 -d '=' | sed 's/^--//;s/-dest//' | tr '[:lower:]' '[:upper:]')
+
+		if printf '%s\n' "${allowed_destinations[@]}" | grep -q "^$destination$"
+		then
+			echo "Setting destination for '$destination' to: '$location'"
+			declare "$destination""_DEST=$(echo "$location")" 
+		fi
+	fi
+done
+
+# Display a summary of the destinations
+echo ''
+echo '------------'
+echo 'DESTINATIONS'
+echo "BIN: $BIN_DEST"
+echo "MAN: $MAN_DEST"
+
+# update the path.mk file
+echo ''
+echo '------------------'
+echo 'Writing path.mk...'
+cat path.mk.in | sed "s:\$BIN_DEST:$BIN_DEST:;s:\$MAN_DEST:$MAN_DEST:" > path.mk
+
+# DONE
+echo ''
+echo '==='
+echo 'done'

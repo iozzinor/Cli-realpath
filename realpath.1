@@ -1,0 +1,20 @@
+.\" Manpage for realpath.
+.\" Contact iozzino.r@gmail.com to correct errors.
+.TH realpath 1 "30 March 2020" "1.0" "realpath man page"
+.SH NAME
+realpath \- display the absolute path of a file
+.SH SYNOPSIS
+realpath [FILEPATH]
+.SH DESCRIPTION
+realpath prints the absolute path of the file specified as an argument.
+It no arguments are provided, then it displays the absolute path of the current working directory.
+.SH RETURN VALUES
+Returns
+.B EXIT_SUCCESS
+in case of success, or
+.B EXIT_FAILURE
+if the file is not found.
+.SH SEE ALSO
+realpath(3) dirname(1)
+.SH AUTHOR
+Iozzino Regis <iozzino.r@gmail.com>
