@@ -5,6 +5,10 @@ ifeq ($(shell test -e $(PATH_MK) && echo -n "yes" || echo "no"),no)
 
 $(PATH_MK):
 	@echo "Please run 'configure' to create 'path.mk'"; exit 1
+
+else
+
+include $(PATH_MK)
 	
 endif
 
